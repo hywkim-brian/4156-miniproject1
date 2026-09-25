@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public final class TaxApiApplication {
 
     /** Private constructor to prevent instantiation. */
-    private TaxApiApplicaton() {
+    private TaxApiApplication() {
     }
 
     /**
@@ -21,6 +21,6 @@ public final class TaxApiApplication {
     public static void main(final String[] args) {
         SpringApplication.run(
             TaxApiApplication.class, args
-        )
+        );
     }
 }

@@ -93,7 +93,7 @@ public final class TaxApiService {
             .anyMatch(c ->
                 c.getName().equalsIgnoreCase(name)
             );
-        if (!nameExists) {
+        if (nameExists) {
             return null;
         }
 
@@ -276,7 +276,7 @@ public final class TaxApiService {
         }
 
         double rate = taxRate.getRate();
-        double taxAmount = price + price * rate;
+        double taxAmount = price * rate;
         double total = price + taxAmount;
 
         return new TaxQuoteResponse(

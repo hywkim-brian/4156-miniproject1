@@ -1,0 +1,13 @@
+I used the following outside documentation while working on the project:
+
+1. Apache Maven PMD Plugin usage documentation:
+https://maven.apache.org/plugins/maven-pmd-plugin/usage
+2. Apache Maven PMD Plugin documentation:
+https://maven.apache.org/plugins/maven-pmd-plugin/
+3. Spring Framework MockMvc documentation:
+https://docs.spring.io/spring/reference/testing/mockmvc.html
+4. Java Javadoc documentation:
+https://docs.oracle.com/en/java/javase/17/javadoc/javadoc.html
+5. java language doc:
+https://docs.oracle.com/javase/specs/jls/se17/html/
+https://docs.oracle.com/javase/tutorial/java/nutsandbolts/
