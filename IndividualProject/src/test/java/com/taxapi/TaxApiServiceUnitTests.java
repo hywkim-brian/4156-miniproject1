@@ -149,4 +149,19 @@ class TaxApiServiceUnitTests {
         assertTrue(response.getStates().contains("CA"));
         assertTrue(response.getCategories().contains("electronics"));
     }
+
+    @Test
+    void updateItemPriceChangesOnlyPrice()
+        throws IOException {
+        Item result = service.updateItemPrice(
+            "item-1",
+            799.99
+        );
+
+        assertNotNull(result);
+        assertEquals("item-1", result.getId());
+        assertEquals("Laptop", result.getName());
+        assertEquals("electronics", result.getCategory());
+        assertEquals(799.99, result.getBasePrice(), 0.001);
+    }
 }

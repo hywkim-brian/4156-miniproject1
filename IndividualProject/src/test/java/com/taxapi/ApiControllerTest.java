@@ -15,6 +15,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -150,7 +152,52 @@ class ApiControllerTest {
             .andExpect(status().isNoContent());
     }
 
+    @Test
+    void updateItemPrice()
+        throws Exception {
+        mockMvc.perform(patch("/v1/items/item-1")
+                .header("X-API-Key", VALID_KEY)
+                .contentType(APPLICATION_JSON)
+                .content("{\"basePrice\":799.99}"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value("item-1"))
+            .andExpect(jsonPath("$.name").value("Laptop"))
+            .andExpect(jsonPath("$.category")
+                .value("electronics"))
+            .andExpect(jsonPath("$.basePrice")
+                .value(799.99));
+    }
 
+    @Test
+    void updateItemPriceWithInvalidKey()
+        throws Exception {
+        mockMvc.perform(patch("/v1/items/item-1")
+                .header("X-API-Key", "blahblahblah")
+                .contentType(APPLICATION_JSON)
+                .content("{\"basePrice\":799.99}"))
+            .andExpect(status().isUnauthorized());
+    }
+
+
+    @Test
+    void updateItemPriceWithNegativePrice()
+        throws Exception {
+        mockMvc.perform(patch("/v1/items/item-1")
+                .header("X-API-Key", VALID_KEY)
+                .contentType(APPLICATION_JSON)
+                .content("{\"basePrice\":-10.00}"))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateMissingItem()
+        throws Exception {
+        mockMvc.perform(patch("/v1/items/missing")
+                .header("X-API-Key", VALID_KEY)
+                .contentType(APPLICATION_JSON)
+                .content("{\"basePrice\":799.99}"))
+            .andExpect(status().isNotFound());
+    }
     @Test
     void contextLoads() {
         // Placeholder so the test class is non-empty. Replace with real tests.

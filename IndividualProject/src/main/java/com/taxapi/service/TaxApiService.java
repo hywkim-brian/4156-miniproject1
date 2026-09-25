@@ -311,4 +311,39 @@ public final class TaxApiService {
             states, categories
         );
     }
+
+    /**
+     * Update an item's base price.
+     *
+     * @param id the item ID
+     * @param basePrice the new base price
+     * @return the updated item, or null if the item does not exist
+     * @throws IOException if an I/O error occurs
+     */
+    public Item updateItemPrice(
+        final String id,
+        final double basePrice
+    ) throws IOException {
+        List<Item> items = readList(
+            "items.json",
+            new TypeReference<>() { }
+        );
+
+        Item item = items.stream()
+            .filter(currentItem ->
+                currentItem.getId().equals(id)
+            )
+            .findFirst()
+            .orElse(null);
+
+        if (item == null) {
+            return null;
+        }
+
+        item.setBasePrice(basePrice);
+        writeList("items.json", items);
+
+        return item;
+    }
+
 }
