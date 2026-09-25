@@ -19,7 +19,7 @@ import com.taxapi.model.TaxQuoteResponse;
 import com.taxapi.service.TaxApiService;
 
 import org.springframework.web.bind.annotation.PatchMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import java.io.IOException;
 import java.util.List;
 
