@@ -60,6 +60,11 @@ public final class TaxQuoteResponse {
     }
 
 
+    /**
+     * Gets the tax rate.
+     *
+     * @return the tax rate
+     */
     public double getTaxRate() {
         return taxRate;
     }

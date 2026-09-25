@@ -2,7 +2,12 @@ package com.taxapi.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.taxapi.model.*;
+import com.taxapi.model.Client;
+import com.taxapi.model.Item;
+import com.taxapi.model.SupportedResponse;
+import com.taxapi.model.TaxQuoteRequest;
+import com.taxapi.model.TaxQuoteResponse;
+import com.taxapi.model.TaxRate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
