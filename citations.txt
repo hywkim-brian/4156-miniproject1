@@ -11,3 +11,14 @@ https://docs.oracle.com/en/java/javase/17/javadoc/javadoc.html
 5. java language doc:
 https://docs.oracle.com/javase/specs/jls/se17/html/
 https://docs.oracle.com/javase/tutorial/java/nutsandbolts/
+6. Stack Overflow - MockMvc request parameters:
+https://stackoverflow.com/questions/17972428/mock-mvc-add-request-parameter-to-test
+7. Stack Overflow - @RequestParam:
+https://stackoverflow.com/questions/22373696/requestparam-in-spring-mvc-handling-optional-parameters
+
+8. Stack Overflow - Case-insensitive searching/filter use:
+https://stackoverflow.com/questions/43753292/performing-a-case-in-sensitive-search-on-a-java-list-using-stream-filter
+9. Stack Overflow - Returning HTTP status codes with ResponseEntity
+https://stackoverflow.com/questions/75589642/spring-boot-rest-api-returning-status-code-of-responseentity
+10. Stack Overflow - Testing a PATCH request with MockMvc:
+https://stackoverflow.com/questions/71833261/spring-boot-patch-request-on-controller-with-map-parameter-test-with-mockmvc

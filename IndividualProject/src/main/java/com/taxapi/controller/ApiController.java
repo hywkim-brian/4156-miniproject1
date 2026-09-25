@@ -98,6 +98,7 @@ public final class ApiController {
     /**
      * Gets all items.
      *
+     * @param apiKey the client's API key
      * @param category the optional category filter
      * @param query the optional name search query
      * @return all items

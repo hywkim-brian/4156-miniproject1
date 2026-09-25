@@ -167,7 +167,8 @@ public final class TaxApiService {
 
 
     /**
-     * Gets all items.-> this is a filler code to make it compatible with other methods that call service.getItems()
+     * Gets all items. This keeps compatibility with methods that call
+     * service.getItems().
      *
      * @return all items
      * @throws IOException if an I/O error occurs
