@@ -19,7 +19,7 @@ import com.taxapi.model.TaxQuoteResponse;
 import com.taxapi.service.TaxApiService;
 
 import org.springframework.web.bind.annotation.PatchMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import java.io.IOException;
 import java.util.List;
 
@@ -98,21 +98,29 @@ public final class ApiController {
     /**
      * Gets all items.
      *
-     * @param apiKey the client API key
+     * @param category the optional category filter
+     * @param query the optional name search query
      * @return all items
      * @throws IOException if an I/O error occurs
      */
     @GetMapping("/items")
     public ResponseEntity<List<Item>> getItems(
         @RequestHeader("X-API-Key")
-        final String apiKey
+        final String apiKey,
+        @RequestParam(required = false)
+        final String category,
+        @RequestParam(name = "q", required = false)
+        final String query
     ) throws IOException {
         if (!taxApiService.validateApiKey(apiKey)) {
             return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .build();
         }
-        List<Item> items = taxApiService.getItems();
+        List<Item> items = taxApiService.getItems(
+            category,
+            query
+        );
         return ResponseEntity.ok(items);
     }
 
@@ -242,6 +250,14 @@ public final class ApiController {
                 .status(HttpStatus.UNAUTHORIZED)
                 .build();
         }
+
+        if (request.getBasePrice() == null
+            || request.getBasePrice() < 0) {
+            return ResponseEntity
+                .badRequest()
+                .build();
+        }
+
         Item updatedItem = taxApiService.updateItemPrice(
             id,
             request.getBasePrice()
