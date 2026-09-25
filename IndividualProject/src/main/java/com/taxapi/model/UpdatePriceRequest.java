@@ -8,6 +8,7 @@ public final class UpdatePriceRequest {
     /** new base price. */
     private Double basePrice;
 
+    /** Creates an empty price update request. */
     public UpdatePriceRequest() {
     }
 
