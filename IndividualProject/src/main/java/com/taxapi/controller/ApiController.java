@@ -12,10 +12,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.taxapi.model.Client;
 import com.taxapi.model.Item;
+import com.taxapi.model.UpdatePriceRequest;
 import com.taxapi.model.SupportedResponse;
 import com.taxapi.model.TaxQuoteRequest;
 import com.taxapi.model.TaxQuoteResponse;
 import com.taxapi.service.TaxApiService;
+
+import org.springframework.web.bind.annotation.PatchMapping;
 
 import java.io.IOException;
 import java.util.List;
@@ -215,5 +218,37 @@ public final class ApiController {
         SupportedResponse response =
             taxApiService.getSupported();
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Update item's base price.
+     *
+     * @param apiKey the client API key
+     * @param id the item ID
+     * @param request the update price request
+     * @return the updated item
+     * @throws IOException if an I/O error occurs
+     */
+    @PatchMapping("/items/{id}")
+    public ResponseEntity<Item> updateItemPrice(
+        @RequestHeader("X-API-Key")
+        final String apiKey,
+        @PathVariable final String id,
+        @RequestBody
+        final UpdatePriceRequest request
+    ) throws IOException {
+        if (!taxApiService.validateApiKey(apiKey)) {
+            return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .build();
+        }
+        Item updatedItem = taxApiService.updateItemPrice(
+            id,
+            request.getBasePrice()
+        );
+        if (updatedItem == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedItem);
     }
 }
