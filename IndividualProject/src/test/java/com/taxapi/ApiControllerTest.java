@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.bind.annotation.RequestParam;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -197,6 +198,78 @@ class ApiControllerTest {
                 .contentType(APPLICATION_JSON)
                 .content("{\"basePrice\":799.99}"))
             .andExpect(status().isNotFound());
+        
+    }
+
+    @Test
+    void getItemsByCategory()
+        throws Exception {
+        mockMvc.perform(get("/v1/items")
+                .param("category", "ELECTRONICS")
+                .header("X-API-Key", VALID_KEY))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$.length()").value(1))
+            .andExpect(jsonPath("$[0].name").value("Laptop"));
+    }
+
+    @Test
+    void getItemsByName()
+        throws Exception {
+        mockMvc.perform(get("/v1/items")
+                .param("q", "top")
+                .header("X-API-Key", VALID_KEY))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$.length()").value(1))
+            .andExpect(jsonPath("$[0].name").value("Laptop"));
+    }
+
+
+    @Test
+    void getItemsByBothCategoryAndName()
+        throws Exception {
+        mockMvc.perform(get("/v1/items")
+                .param("category", "electronics")
+                .param("q", "lap")
+                .header("X-API-Key", VALID_KEY))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$.length()").value(1))
+            .andExpect(jsonPath("$[0].name").value("Laptop"));
+    }
+
+
+    @Test
+    void getItemsWithNoCategoryMatches()
+        throws Exception {
+        mockMvc.perform(get("/v1/items")
+                .param("category", "clothing")
+                .header("X-API-Key", VALID_KEY))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$.length()").value(0));
+    }
+
+    @Test
+    void getItemsWithNoNameMatches()
+        throws Exception {
+        mockMvc.perform(get("/v1/items")
+                .param("q", "phone")
+                .header("X-API-Key", VALID_KEY))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$.length()").value(0));
+    }
+
+
+    @Test
+    void filteredItemsWithInvalidKey()
+        throws Exception {
+        mockMvc.perform(get("/v1/items")
+                .param("category", "electronics")
+                .header("X-API-Key", "bad-key"))
+            .andExpect(status().isUnauthorized());
     }
     @Test
     void contextLoads() {

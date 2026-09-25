@@ -165,18 +165,48 @@ public final class TaxApiService {
         return newItem;
     }
 
+
     /**
-     * Gets all items.
+     * Gets all items.-> this is a filler code to make it compatible with other methods that call service.getItems()
      *
      * @return all items
      * @throws IOException if an I/O error occurs
      */
     public List<Item> getItems() throws IOException {
-        return readList(
+        return getItems(null, null);
+    }
+
+    /**
+     * Gets items filtered by category and name.
+     *
+     * @param category the optional category filter
+     * @param query the optional name search query
+     * @return matching items
+     * @throws IOException if an I/O error occurs
+     */
+    public List<Item> getItems(
+        final String category,
+        final String query
+    ) throws IOException {
+        List<Item> items = readList(
             "items.json",
             new TypeReference<>() { }
         );
-    }
+
+        return items.stream()
+            .filter(item ->
+                category == null
+                    || item.getCategory()
+                        .equalsIgnoreCase(category)
+            )
+            .filter(item ->
+                query == null
+                    || item.getName()
+                        .toLowerCase()
+                        .contains(query.toLowerCase())
+            )
+            .toList();
+    } 
 
     /**
      * Gets an item by ID.
