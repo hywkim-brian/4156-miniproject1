@@ -9,6 +9,12 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,6 +53,103 @@ class ApiControllerTest {
 
     // TODO(student): add @Test methods that exercise ApiController endpoints
     // via mockMvc.perform(...). Aim for >= 55% JaCoCo coverage overall.
+
+    @Test
+    void createClient() throws Exception {
+        mockMvc.perform(post("/v1/clients")
+                .contentType(APPLICATION_JSON)
+                .content("{\"name\":\"Bob\"}"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name").value("Bob"));
+    }
+
+    @Test
+    void duplicateClient() throws Exception {
+        mockMvc.perform(post("/v1/clients")
+                .contentType(APPLICATION_JSON)
+                .content("{\"name\":\"Alice\"}"))
+            .andExpect(status().isConflict())
+            .andExpect(jsonPath("$.error").exists());
+    }
+
+    @Test
+    void getItemsWithValidKey() throws Exception {
+        mockMvc.perform(get("/v1/items")
+                .header("X-API-Key", VALID_KEY))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].id").value("item-1"))
+            .andExpect(jsonPath("$[0].name").value("Laptop"));
+    }
+
+    @Test
+    void getItemsWithInvalidKey()
+        throws Exception {
+        mockMvc.perform(get("/v1/items")
+                .header("X-API-Key", "bad-key"))
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void getItemsWithoutKey()
+        throws Exception {
+        mockMvc.perform(get("/v1/items"))
+        .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createItemWithValidKey()
+        throws Exception {
+        mockMvc.perform(post("/v1/items")
+                .header("X-API-Key", VALID_KEY)
+                .contentType(APPLICATION_JSON)
+                .content(
+                    "{\"name\":\"Phone\","
+                        + "\"category\":\"electronics\","
+                        + "\"basePrice\":500}"
+                ))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name").value("Phone"))
+            .andExpect(jsonPath("$.category")
+                .value("electronics"));
+    }
+    @Test
+    void createItemWithInvalidKey()
+        throws Exception {
+        mockMvc.perform(post("/v1/items")
+                .header("X-API-Key", "bad-key")
+                .contentType(APPLICATION_JSON)
+                .content(
+                    "{\"name\":\"Phone\","
+                        + "\"category\":\"electronics\","
+                        + "\"basePrice\":500}"
+                ))
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void getExistingItem() throws Exception {
+        mockMvc.perform(get("/v1/items/item-1")
+                .header("X-API-Key", VALID_KEY))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value("item-1"))
+            .andExpect(jsonPath("$.name").value("Laptop"));
+    }
+
+
+    @Test
+    void getMissingItem() throws Exception {
+        mockMvc.perform(get("/v1/items/missing")
+                .header("X-API-Key", VALID_KEY))
+            .andExpect(status().isNotFound());
+    }
+    @Test
+    void deleteExistingItem()
+        throws Exception {
+        mockMvc.perform(delete("/v1/items/item-1")
+                .header("X-API-Key", VALID_KEY))
+            .andExpect(status().isNoContent());
+    }
+
 
     @Test
     void contextLoads() {

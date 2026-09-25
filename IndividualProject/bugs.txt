@@ -1,0 +1,61 @@
+Bug 1: TaxApiApplication constructor name
+
+File: src/main/java/com/taxapi/TaxApiApplication.java
+The private constructor was named TaxApiApplicaton instead of
+TaxApiApplication. Because the constructor name did not match the class
+name, the project would not compile.
+
+
+
+Bug 2: Missing semicolon in the application startup class
+
+File: src/main/java/com/taxapi/TaxApiApplication.java
+The SpringApplication.run call was missing a semicolon, causing a Java
+compilation error.
+
+
+
+Bug 3: Missing semicolon when creating an item
+
+File: src/main/java/com/taxapi/controller/ApiController.java
+The return statement in createItem was missing a semicolon preventing 
+the controller from compiling.
+
+
+
+Bug 4: Item IDs returned the item name
+
+File: src/main/java/com/taxapi/model/Item.javaåå
+The getId method returned name instead of id. This meant item lookup and
+deletion could use the wrong value as the item identifier.
+
+Fix: Changed getId to return id.
+
+
+Bug 5: Client duplicate check was reversed
+
+File: src/main/java/com/taxapi/service/TaxApiService.java
+
+The createClient method returned null when a name did not already exist and
+created a client when the name was already in the file. 
+
+Fix: Changed the condition to return null when nameExists is true.
+
+
+Bug 6: Tax amount includes the original price
+
+File: src/main/java/com/taxapi/service/TaxApiService.java
+
+The calculateTax method calculated taxAmount as price plus price multiplied
+by the rate. Tax amount should only be the tax portion. For a price of 100
+and a rate of 0.0725, the tax should be 7.25, not 107.25.
+
+Fix: Changed the calculation to price * rate. The total is then calculated
+as price + taxAmount.
+
+
+Static analysis result
+PMD was run with mvn pmd:pmd. The generated report found no PMD problems.
+The bugs above were found through compilation, tests, and manual review of
+the implementation against its Javadocs.
+åå
